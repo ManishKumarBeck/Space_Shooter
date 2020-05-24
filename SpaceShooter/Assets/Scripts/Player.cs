@@ -6,7 +6,13 @@ using UnityEngine;
 public class Player : MonoBehaviour
 {
     [SerializeField]
-    private float _speed = 5f;
+    private float _speed = 1f;
+    [SerializeField]
+    private float _originalSpeed = 5f;
+    [SerializeField]
+    private float _increasedSpeed = 7.5f;
+    [SerializeField]
+    private float _increasedSpeedTimer = 500f;
     [SerializeField]
     private GameObject _laserPrefab;
     [SerializeField]
@@ -14,7 +20,7 @@ public class Player : MonoBehaviour
     [SerializeField]
     private GameObject _shieldVisualiser;
     [SerializeField]
-    private GameObject[] _engineDamage;   
+    private GameObject[] _engineDamage;
     [SerializeField]
     private Vector3 _offset;
     [SerializeField]
@@ -25,11 +31,12 @@ public class Player : MonoBehaviour
     private int _score;
     [SerializeField]
     private AudioClip _laserSound;
-    
-    
-    private bool _isTripleShotActive = false;    
-    private bool _isShieldActive = false; 
-        
+
+
+    private bool _isTripleShotActive = false;
+    private bool _isShieldActive = false;
+    private bool _isSpeedBoostActive = false;
+
     private float _canFire = -1f;
     private float _speedMultiplier = 2f;
 
@@ -39,14 +46,14 @@ public class Player : MonoBehaviour
 
 
     void Start()
-    {        
+    {
         transform.position = new Vector3(0, 0, 0);
         _spawnManager = GameObject.Find("Spawn_Manager").GetComponent<SpawnManager>();
         _uiManager = GameObject.Find("Canvas").GetComponent<UIManager>();
         _audioScource = GetComponent<AudioSource>();
-        
 
-        if(_spawnManager == null)
+
+        if (_spawnManager == null)
         {
             Debug.LogError("Spawn Manager is NULL");
         }
@@ -56,7 +63,7 @@ public class Player : MonoBehaviour
             Debug.LogError("UI Manager is NULL");
         }
 
-        if(_audioScource == null)
+        if (_audioScource == null)
         {
             Debug.LogError("Audio Source is NULL");
         }
@@ -64,17 +71,29 @@ public class Player : MonoBehaviour
         {
             _audioScource.clip = _laserSound;
         }
-       
+
     }
 
     void Update()
     {
+
+
         ClaculateMovement();
         if (Input.GetKeyDown(KeyCode.Space) && Time.time > _canFire)
         {
             FireLaser();
         }
-    
+
+        if (Input.GetKey(KeyCode.LeftShift) && _isSpeedBoostActive == false && _increasedSpeedTimer >= 10)
+        {
+            _speed = _increasedSpeed;
+        }
+        else if (_isSpeedBoostActive == false)
+        {
+            _speed = _originalSpeed;
+        }
+
+
     }
 
     void ClaculateMovement()
@@ -100,26 +119,46 @@ public class Player : MonoBehaviour
         }
     }
 
+    private void FixedUpdate()
+    {
+        if (_speed == _increasedSpeed)
+        {
+            if (_increasedSpeedTimer >= 2)
+            {
+                _increasedSpeedTimer -= 2;
+            }
+            else
+            {
+                _speed = _originalSpeed;
+            }
+        }
+
+        else if (_increasedSpeedTimer < 500)
+        {
+            _increasedSpeedTimer += 1;
+        }
+    }
+
     void FireLaser()
     {
         _canFire = Time.time + _fireRate;
-        
-        if(_isTripleShotActive == true)
+
+        if (_isTripleShotActive == true)
         {
-            Instantiate(_tripleShot, transform.position , Quaternion.identity);
+            Instantiate(_tripleShot, transform.position, Quaternion.identity);
         }
         else
         {
             Instantiate(_laserPrefab, transform.position + _offset, Quaternion.identity);
         }
-        
+
         _audioScource.Play();
 
     }
 
     public void Damage()
     {
-        if(_isShieldActive == true)
+        if (_isShieldActive == true)
         {
             _shieldVisualiser.SetActive(false);
             _isShieldActive = false;
@@ -129,7 +168,7 @@ public class Player : MonoBehaviour
         _lives--;
         _uiManager.UpdateLives(_lives);
 
-        if(_lives == 2)
+        if (_lives == 2)
         {
             _engineDamage[0].SetActive(true);
         }
@@ -143,7 +182,7 @@ public class Player : MonoBehaviour
             _spawnManager.OnPlayerDeath();
             _uiManager.GameOverSequence();
 
-            Destroy(this.gameObject);            
+            Destroy(this.gameObject);
         }
     }
 
@@ -161,27 +200,31 @@ public class Player : MonoBehaviour
 
     public void SpeedBoost()
     {
-        _speed *= _speedMultiplier;
+        _originalSpeed *= _speedMultiplier;
+        _speed = _originalSpeed;
+        _isSpeedBoostActive = true;
         StartCoroutine(SpeedBoostPowerDownRoutine());
     }
 
     IEnumerator SpeedBoostPowerDownRoutine()
     {
         yield return new WaitForSeconds(5f);
-        _speed /= _speedMultiplier;
+        _originalSpeed /= _speedMultiplier;
+        _speed = _originalSpeed;
+        _isSpeedBoostActive = false;
     }
-    
+
     public void ShieldActive()
     {
         _isShieldActive = true;
         _shieldVisualiser.SetActive(true);
     }
-    
+
     public void AddScore(int points)
     {
         _score += points;
         _uiManager.UpdateScore(_score);
     }
 
-   
+
 }
