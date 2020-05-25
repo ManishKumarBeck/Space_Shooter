@@ -32,6 +32,7 @@ public class Player : MonoBehaviour
     [SerializeField]
     private AudioClip _laserSound;
 
+    private int _shieldStrength = 3;
 
     private bool _isTripleShotActive = false;
     private bool _isShieldActive = false;
@@ -43,6 +44,9 @@ public class Player : MonoBehaviour
     private SpawnManager _spawnManager;
     private UIManager _uiManager;
     private AudioSource _audioScource;
+    Renderer _shieldRendered;
+
+
 
 
     void Start()
@@ -51,7 +55,12 @@ public class Player : MonoBehaviour
         _spawnManager = GameObject.Find("Spawn_Manager").GetComponent<SpawnManager>();
         _uiManager = GameObject.Find("Canvas").GetComponent<UIManager>();
         _audioScource = GetComponent<AudioSource>();
+        _shieldRendered = _shieldVisualiser.GetComponent<Renderer>();
 
+        if (_shieldRendered == null)
+        {
+            Debug.LogError("Shield Rendere not found");
+        }
 
         if (_spawnManager == null)
         {
@@ -160,10 +169,27 @@ public class Player : MonoBehaviour
     {
         if (_isShieldActive == true)
         {
-            _shieldVisualiser.SetActive(false);
-            _isShieldActive = false;
-            return;
+
+            _shieldStrength--;
+
+            if (_shieldStrength == 2)
+            {
+                _shieldRendered.material.color = Color.yellow;
+                return;
+            }
+            if (_shieldStrength == 1)
+            {
+                _shieldRendered.material.color = Color.red;
+                return;
+            }
+            else
+            {
+                _shieldVisualiser.SetActive(false);
+                _isShieldActive = false;
+                return;
+            }
         }
+
 
         _lives--;
         _uiManager.UpdateLives(_lives);
@@ -218,6 +244,9 @@ public class Player : MonoBehaviour
     {
         _isShieldActive = true;
         _shieldVisualiser.SetActive(true);
+        _shieldStrength = 3;
+        _shieldRendered.material.color = Color.white;
+
     }
 
     public void AddScore(int points)
