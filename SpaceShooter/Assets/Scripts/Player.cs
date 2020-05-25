@@ -32,6 +32,9 @@ public class Player : MonoBehaviour
     [SerializeField]
     private AudioClip _laserSound;
 
+    [SerializeField]
+    private int _ammoCount = 15;
+
     private int _shieldStrength = 3;
 
     private bool _isTripleShotActive = false;
@@ -78,9 +81,10 @@ public class Player : MonoBehaviour
         }
         else
         {
-            _audioScource.clip = _laserSound;
+           _audioScource.clip = _laserSound;
         }
 
+        _uiManager.UpdateAmmo(_ammoCount);
     }
 
     void Update()
@@ -155,14 +159,24 @@ public class Player : MonoBehaviour
         if (_isTripleShotActive == true)
         {
             Instantiate(_tripleShot, transform.position, Quaternion.identity);
+            
+        }
+        else if (_ammoCount > 0)
+        {
+            _ammoCount--;
+            Instantiate(_laserPrefab, transform.position + _offset, Quaternion.identity);
         }
         else
         {
-            Instantiate(_laserPrefab, transform.position + _offset, Quaternion.identity);
+            Debug.Log("Ammo not present");
+            _uiManager.AmmoIndiactor(true);
         }
 
-        _audioScource.Play();
-
+        if (_ammoCount > 0)
+        {
+            _audioScource.Play();
+        }
+        _uiManager.UpdateAmmo(_ammoCount);
     }
 
     public void Damage()
