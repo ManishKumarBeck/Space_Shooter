@@ -36,8 +36,9 @@ public class PowerUp : MonoBehaviour
                         break;
                     case 1: player.SpeedBoost();
                         break;
-                    case 2:
-                        player.ShieldActive();
+                    case 2: player.ShieldActive();
+                        break;
+                    case 3: player.AmmoReload();
                         break;
                     default:
                         Debug.Log("default");

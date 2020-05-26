@@ -40,6 +40,7 @@ public class Player : MonoBehaviour
     private bool _isTripleShotActive = false;
     private bool _isShieldActive = false;
     private bool _isSpeedBoostActive = false;
+    private bool _isAmmoCollected = false;
 
     private float _canFire = -1f;
     private float _speedMultiplier = 2f;
@@ -269,5 +270,12 @@ public class Player : MonoBehaviour
         _uiManager.UpdateScore(_score);
     }
 
+    public void AmmoReload()
+    {
+        _isAmmoCollected = true;
+        _ammoCount = 15;
+        _uiManager.UpdateAmmo(_ammoCount);
+        Debug.Log("Ammo collected");
+    }
 
 }
