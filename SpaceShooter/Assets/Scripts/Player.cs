@@ -209,9 +209,20 @@ public class Player : MonoBehaviour
         _lives--;
         _uiManager.UpdateLives(_lives);
 
+        EngineDamage();
+    }
+
+    public void EngineDamage()
+    {
+        if(_lives == 3)
+        {
+            _engineDamage[0].SetActive(false);
+            _engineDamage[1].SetActive(false);
+        }
         if (_lives == 2)
         {
             _engineDamage[0].SetActive(true);
+            _engineDamage[1].SetActive(false);
         }
         if (_lives == 1)
         {
@@ -276,6 +287,16 @@ public class Player : MonoBehaviour
         _ammoCount = 15;
         _uiManager.UpdateAmmo(_ammoCount);
         Debug.Log("Ammo collected");
+    }
+
+    public void HealthPickup()
+    {
+        if(_lives < 3)
+        {
+            _lives++;
+            _uiManager.UpdateLives(_lives);
+            EngineDamage();
+        }
     }
 
 }
