@@ -17,7 +17,13 @@ public class UIManager : MonoBehaviour
     [SerializeField]
     private Text _ammoText;
     [SerializeField]
+    private Text _thrusterText;
+    [SerializeField]
+    private Transform _thrusterHUD;
+    [SerializeField]
     private Sprite[] _liveSprites;
+    
+
 
     //private bool _isAmmoEmpty = false;
 
@@ -100,5 +106,12 @@ public class UIManager : MonoBehaviour
             _ammoText.color = Color.white;
             yield return new WaitForSeconds(0.2f);
         }
+    }
+
+    public void ThrusterVisualisation(float timer)
+    {
+        float thrusterLeft = (timer / 500) * 100;
+        _thrusterText.text = "Thruster: " + string.Format("{0}", thrusterLeft) + "%";
+        _thrusterHUD.localScale = new Vector3(thrusterLeft/100, 1.0f, 1.0f);
     }
 }

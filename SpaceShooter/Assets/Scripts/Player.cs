@@ -20,7 +20,9 @@ public class Player : MonoBehaviour
     [SerializeField]
     private GameObject _shieldVisualiser;
     [SerializeField]
-    private GameObject[] _engineDamage;
+    private GameObject _thrusters;
+    [SerializeField]
+    private GameObject[] _engineDamage;   
     [SerializeField]
     private Vector3 _offset;
     [SerializeField]
@@ -30,7 +32,8 @@ public class Player : MonoBehaviour
     [SerializeField]
     private int _score;
     [SerializeField]
-    private AudioClip _laserSound;
+    private AudioClip _laserSound;    
+    
 
     [SerializeField]
     private int _ammoCount = 15;
@@ -49,6 +52,7 @@ public class Player : MonoBehaviour
     private UIManager _uiManager;
     private AudioSource _audioScource;
     Renderer _shieldRendered;
+    Renderer _thrusterRenderer;
 
 
 
@@ -60,10 +64,15 @@ public class Player : MonoBehaviour
         _uiManager = GameObject.Find("Canvas").GetComponent<UIManager>();
         _audioScource = GetComponent<AudioSource>();
         _shieldRendered = _shieldVisualiser.GetComponent<Renderer>();
+        _thrusterRenderer = _thrusters.GetComponent<Renderer>();
 
         if (_shieldRendered == null)
         {
             Debug.LogError("Shield Rendere not found");
+        }
+        if(_thrusterRenderer == null)
+        {
+            Debug.LogError("Thruster Rendere not found");
         }
 
         if (_spawnManager == null)
@@ -98,13 +107,19 @@ public class Player : MonoBehaviour
             FireLaser();
         }
 
-        if (Input.GetKey(KeyCode.LeftShift) && _isSpeedBoostActive == false && _increasedSpeedTimer >= 10)
+        if (Input.GetKey(KeyCode.LeftShift) && _isSpeedBoostActive == false )
         {
-            _speed = _increasedSpeed;
+            if (_increasedSpeedTimer > 1)
+            {
+                _speed = _increasedSpeed;
+                _uiManager.ThrusterVisualisation(_increasedSpeedTimer);
+                _thrusterRenderer.material.color = Color.blue;
+            }
         }
         else if (_isSpeedBoostActive == false)
         {
             _speed = _originalSpeed;
+            _thrusterRenderer.material.color = Color.white;
         }
 
 
@@ -147,10 +162,11 @@ public class Player : MonoBehaviour
             }
         }
 
-        else if (_increasedSpeedTimer < 500)
+        else if (_increasedSpeedTimer < 500 && !Input.GetKey(KeyCode.LeftShift))
         {
             _increasedSpeedTimer += 1;
         }
+        _uiManager.ThrusterVisualisation(_increasedSpeedTimer);
     }
 
     void FireLaser()
