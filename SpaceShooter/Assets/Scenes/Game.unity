@@ -918,6 +918,7 @@ MonoBehaviour:
   - {fileID: 495736511984891325, guid: 0791ef7302edffb4d8ca268a62e1d4f4, type: 3}
   - {fileID: 7016669975256300465, guid: 8ddda24f115a6f34c845351fb4e2a6c3, type: 3}
   - {fileID: 5452614245710789616, guid: 6876d50c8a49c1a41b9e6aedce2e0982, type: 3}
+  - {fileID: 1701511491407088665, guid: 905e9d58651dcc846b30725d7bfd0652, type: 3}
 --- !u!1 &1233126663
 GameObject:
   m_ObjectHideFlags: 0
@@ -1935,9 +1936,12 @@ MonoBehaviour:
   _originalSpeed: 5
   _increasedSpeed: 7.5
   _increasedSpeedTimer: 500
+  _ammoCount: 15
   _laserPrefab: {fileID: 6152843580120199240, guid: f3e220368b675ec418d93c1bac0b7bfc,
     type: 3}
   _tripleShot: {fileID: 7709507242342096, guid: a82ab8a0443de334c90bbcc11c222620,
+    type: 3}
+  _hunterDronePrefab: {fileID: 8920880615442902974, guid: bcf6357eb55c7234cb865893f08ecef9,
     type: 3}
   _shieldVisualiser: {fileID: 1659512037}
   _thrusters: {fileID: 1900157781}
@@ -1949,7 +1953,6 @@ MonoBehaviour:
   _lives: 3
   _score: 0
   _laserSound: {fileID: 8300000, guid: 75676f361bdfeaf41a46623e95df3dbc, type: 3}
-  _ammoCount: 15
 --- !u!212 &1779132354
 SpriteRenderer:
   m_ObjectHideFlags: 0

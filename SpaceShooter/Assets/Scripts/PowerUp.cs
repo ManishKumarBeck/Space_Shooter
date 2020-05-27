@@ -42,6 +42,8 @@ public class PowerUp : MonoBehaviour
                         break;
                     case 4: player.HealthPickup();
                          break;
+                    case 5: player.HunterDroneActive();
+                        break;
                     default:
                         Debug.Log("default");
                         break;

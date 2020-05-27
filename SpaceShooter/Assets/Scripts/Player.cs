@@ -14,9 +14,13 @@ public class Player : MonoBehaviour
     [SerializeField]
     private float _increasedSpeedTimer = 500f;
     [SerializeField]
+    private int _ammoCount = 15;
+    [SerializeField]
     private GameObject _laserPrefab;
     [SerializeField]
     private GameObject _tripleShot;
+    [SerializeField]
+    private GameObject _hunterDronePrefab;
     [SerializeField]
     private GameObject _shieldVisualiser;
     [SerializeField]
@@ -35,8 +39,7 @@ public class Player : MonoBehaviour
     private AudioClip _laserSound;    
     
 
-    [SerializeField]
-    private int _ammoCount = 15;
+
 
     private int _shieldStrength = 3;
 
@@ -44,6 +47,7 @@ public class Player : MonoBehaviour
     private bool _isShieldActive = false;
     private bool _isSpeedBoostActive = false;
     private bool _isAmmoCollected = false;
+    private bool _isHunterDroneActive = false;
 
     private float _canFire = -1f;
     private float _speedMultiplier = 2f;
@@ -195,6 +199,10 @@ public class Player : MonoBehaviour
             Instantiate(_tripleShot, transform.position, Quaternion.identity);
             
         }
+        else if(_isHunterDroneActive == true)
+        {
+            Instantiate(_hunterDronePrefab, transform.position, Quaternion.identity);
+        }   
         else if (_ammoCount > 0)
         {
             _ammoCount--;
@@ -285,6 +293,18 @@ public class Player : MonoBehaviour
         _isTripleShotActive = false;
     }
 
+    public void HunterDroneActive()
+    {
+        _isHunterDroneActive = true;
+        _isTripleShotActive = false;
+        StartCoroutine(HomingMissilePowerDownRoutine());
+    }
+
+    IEnumerator HomingMissilePowerDownRoutine()
+    {
+        yield return new WaitForSeconds(5f);
+        _isHunterDroneActive = false;
+    }
     public void SpeedBoost()
     {
         _originalSpeed *= _speedMultiplier;

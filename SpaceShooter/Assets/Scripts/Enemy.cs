@@ -113,8 +113,9 @@ public class Enemy : MonoBehaviour
         }
     }
 
-    private void DestructionCheck()
+    public bool DestructionCheck()
     {
         _isDestroyed = true;
+        return true;
     }
 }
