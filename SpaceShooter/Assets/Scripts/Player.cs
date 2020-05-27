@@ -51,6 +51,8 @@ public class Player : MonoBehaviour
     private SpawnManager _spawnManager;
     private UIManager _uiManager;
     private AudioSource _audioScource;
+    private CameraShake _cameraShake;
+
     Renderer _shieldRendered;
     Renderer _thrusterRenderer;
 
@@ -65,6 +67,7 @@ public class Player : MonoBehaviour
         _audioScource = GetComponent<AudioSource>();
         _shieldRendered = _shieldVisualiser.GetComponent<Renderer>();
         _thrusterRenderer = _thrusters.GetComponent<Renderer>();
+        _cameraShake = GameObject.Find("Main Camera").GetComponent<CameraShake>();
 
         if (_shieldRendered == null)
         {
@@ -73,6 +76,10 @@ public class Player : MonoBehaviour
         if(_thrusterRenderer == null)
         {
             Debug.LogError("Thruster Rendere not found");
+        }
+        if(_cameraShake == null)
+        {
+            Debug.LogError("Camera shake is NULL");
         }
 
         if (_spawnManager == null)
@@ -102,12 +109,13 @@ public class Player : MonoBehaviour
 
 
         ClaculateMovement();
+        
         if (Input.GetKeyDown(KeyCode.Space) && Time.time > _canFire)
         {
             FireLaser();
         }
 
-        if (Input.GetKey(KeyCode.LeftShift) && _isSpeedBoostActive == false )
+        if (Input.GetKey(KeyCode.LeftShift) && _isSpeedBoostActive == false)
         {
             if (_increasedSpeedTimer > 1)
             {
@@ -115,14 +123,22 @@ public class Player : MonoBehaviour
                 _uiManager.ThrusterVisualisation(_increasedSpeedTimer);
                 _thrusterRenderer.material.color = Color.blue;
             }
+            else
+            {
+                _thrusterRenderer.material.color = Color.white;
+            }
         }
-        else if (_isSpeedBoostActive == false)
+        else if (_isSpeedBoostActive == true)
+        {
+            _thrusterRenderer.material.color = Color.green;
+        }
+        else
         {
             _speed = _originalSpeed;
             _thrusterRenderer.material.color = Color.white;
         }
 
-
+        
     }
 
     void ClaculateMovement()
@@ -168,6 +184,7 @@ public class Player : MonoBehaviour
         }
         _uiManager.ThrusterVisualisation(_increasedSpeedTimer);
     }
+   
 
     void FireLaser()
     {
@@ -224,8 +241,17 @@ public class Player : MonoBehaviour
 
         _lives--;
         _uiManager.UpdateLives(_lives);
-
+        StartCoroutine(_cameraShake.Shake(0.15f, 0.4f));
+      
         EngineDamage();
+
+        if (_lives <= 0)
+        {
+            _spawnManager.OnPlayerDeath();
+            _uiManager.GameOverSequence();
+
+            Destroy(this.gameObject);
+        }
     }
 
     public void EngineDamage()
@@ -245,13 +271,6 @@ public class Player : MonoBehaviour
             _engineDamage[1].SetActive(true);
         }
 
-        if (_lives <= 0)
-        {
-            _spawnManager.OnPlayerDeath();
-            _uiManager.GameOverSequence();
-
-            Destroy(this.gameObject);
-        }
     }
 
     public void TripleShotActive()
@@ -269,7 +288,7 @@ public class Player : MonoBehaviour
     public void SpeedBoost()
     {
         _originalSpeed *= _speedMultiplier;
-        _speed = _originalSpeed;
+        _speed = _originalSpeed;        
         _isSpeedBoostActive = true;
         StartCoroutine(SpeedBoostPowerDownRoutine());
     }
