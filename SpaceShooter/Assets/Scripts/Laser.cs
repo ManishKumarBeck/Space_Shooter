@@ -8,15 +8,19 @@ public class Laser : MonoBehaviour
     private float _speed = 8f;
     [SerializeField]
     private bool _isEnemyLaser = false;
+    [SerializeField]
+    private bool _isDiagonalLaser = false;
+
     void Update()
     {
-        if(_isEnemyLaser == false)
-        {
-            MoveUp();
-        }
-        else
+        if(_isEnemyLaser == true || _isDiagonalLaser == true)
         {
             MoveDown();
+        }
+        
+        else
+        {
+            MoveUp();            
         }
     }
 
@@ -28,7 +32,7 @@ public class Laser : MonoBehaviour
 
     void MoveDown()
     {
-        transform.Translate(Vector3.down * _speed * Time.deltaTime);
+        transform.Translate(Vector3.down * _speed * Time.deltaTime );
         Destroy();
     }
 
@@ -50,14 +54,23 @@ public class Laser : MonoBehaviour
         _isEnemyLaser = true;
     }
 
+    public void AssignDiagonalEnemyLaser()
+    {
+        _isDiagonalLaser = true;
+    }
+
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if(other.tag == "Player" && _isEnemyLaser == true)
-        {            
-            Player player = other.GetComponent<Player>();
-            if(player != null)
+        if(other.tag == "Player" )
+        {
+            if (_isEnemyLaser == true || _isDiagonalLaser == true)
             {
-                player.Damage();
+                Player player = other.GetComponent<Player>();
+                if (player != null)
+                {
+                    player.Damage();
+                }
+                Destroy(this.gameObject);
             }
         }
     }

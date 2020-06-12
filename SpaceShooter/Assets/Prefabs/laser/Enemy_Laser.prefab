@@ -27,7 +27,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2405988086370647836}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: -1.16, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 2770077622951711882}
@@ -49,6 +49,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _speed: 8
   _isEnemyLaser: 0
+  _isDiagonalLaser: 0
 --- !u!50 &5559510254395259473
 Rigidbody2D:
   serializedVersion: 4
@@ -83,7 +84,7 @@ BoxCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: -0.002480097, y: -1.1440148}
+  m_Offset: {x: -0.002480097, y: 0}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
@@ -111,7 +112,7 @@ PrefabInstance:
     - target: {fileID: 6152843580120199236, guid: f3e220368b675ec418d93c1bac0b7bfc,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: -1.16
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6152843580120199236, guid: f3e220368b675ec418d93c1bac0b7bfc,
         type: 3}
@@ -209,7 +210,7 @@ PrefabInstance:
     - target: {fileID: 6152843580120199236, guid: f3e220368b675ec418d93c1bac0b7bfc,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: -1.16
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6152843580120199236, guid: f3e220368b675ec418d93c1bac0b7bfc,
         type: 3}

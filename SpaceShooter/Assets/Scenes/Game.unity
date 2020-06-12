@@ -909,8 +909,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e494aaa4e5eba9841b6f6c50de95dd50, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _enemyPrefab: {fileID: 4892287864653221346, guid: 61a1fe79c557aec4bb028a6ddab9c319,
-    type: 3}
+  _enemyPrefab:
+  - {fileID: 4892287864653221346, guid: 61a1fe79c557aec4bb028a6ddab9c319, type: 3}
+  - {fileID: 9162188543662488384, guid: a755520ca5b8f7743a03f8ad982cd9ee, type: 3}
   _enemyContainer: {fileID: 997373933}
   _powerUps:
   - {fileID: 2726902232309498382, guid: 7503dfc91e3f782468b3cee28bb20ccc, type: 3}

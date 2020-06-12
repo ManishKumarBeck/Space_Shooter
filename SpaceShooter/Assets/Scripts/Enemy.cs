@@ -10,8 +10,14 @@ public class Enemy : MonoBehaviour
     private int _pointsOfEnemy = 10;
     [SerializeField]
     private GameObject _laserPrefab;
-    
+    [SerializeField]
+    private bool _isDiagonalMovementEnable = false;
+    [SerializeField]
+    private int _angle = 45;
+   
+
     private bool _isDestroyed = false;
+    private GameObject _target;
 
     private float _fireRate = 4.0f;
     private float _canFire = -1;
@@ -37,28 +43,46 @@ public class Enemy : MonoBehaviour
             Debug.LogError("Animator is NULL");
         }
 
+         _angle = AssignAngle();
+        
 
     }
 
     void Update()
     {
-        CalculateMovement();
-
-        if(Time.time > _canFire)
+        if (_isDiagonalMovementEnable == false)
+        {
+            CalculateMovement();
+        }
+        if(_isDiagonalMovementEnable == true)
+        {            
+            DiagonalMovement(_angle);
+        }
+        if(Time.time > _canFire && _isDestroyed == false)
         {
             _fireRate = Random.Range(3f, 8f);
             _canFire = Time.time + _fireRate;
-            GameObject enemyLaser = Instantiate(_laserPrefab, transform.position, Quaternion.identity);
+            GameObject enemyLaser = Instantiate(_laserPrefab, transform.position, transform.rotation);
             Laser[] lasers = enemyLaser.GetComponentsInChildren<Laser>();
-            if(lasers == null)
+            if (lasers == null)
             {
                 Debug.Log("Laser is null");
             }
-            for(int i = 0; i < lasers.Length; i++)
+            for (int i = 0; i < lasers.Length; i++)
             {
-                lasers[i].AssignEnemyLaser();
-            }
-            
+                if (_isDiagonalMovementEnable == false)
+                {
+                    lasers[i].AssignEnemyLaser();
+                    Debug.Log("Down Laser");
+                }
+                if (_isDiagonalMovementEnable == true)
+                {
+                    lasers[i].AssignDiagonalEnemyLaser();
+                    Debug.Log("Diagonal Laser");
+                }
+
+            }            
+
         }
     }
 
@@ -66,10 +90,7 @@ public class Enemy : MonoBehaviour
     {
         transform.Translate(Vector3.down * _speed * Time.deltaTime);
 
-        if (transform.position.y < -5.5f)
-        {
-            Respawn();
-        }
+        CheckRange();
 
         if (transform.position.y < -4.5 && _isDestroyed == true)
         {
@@ -78,6 +99,31 @@ public class Enemy : MonoBehaviour
         }
     }
 
+    void DiagonalMovement(int angle)
+    {
+      
+        transform.rotation = Quaternion.AngleAxis(angle,new Vector3(0,0,1));
+        transform.Translate(Vector3.down * _speed * Time.deltaTime);
+
+        CheckRange();
+       
+    }
+
+    void CheckRange()
+    {
+        if (transform.position.y < -5.5f)
+        {
+            if (_isDiagonalMovementEnable == false)
+            {
+                Respawn();
+            }
+
+            else
+            {
+                Destroy(this.gameObject);
+            }
+        }
+    }
 
     void Respawn()
     {
@@ -111,6 +157,22 @@ public class Enemy : MonoBehaviour
             
             Destroy(this.gameObject, 2.20f);
         }
+    }
+
+    private int AssignAngle()
+    {
+
+        if (transform.position.x < 0)
+        {
+            _angle = _angle * 1;
+        }
+        if (transform.position.x > 0)
+        {
+            _angle = _angle * -1;
+        }
+
+
+        return _angle;
     }
 
     public bool DestructionCheck()
