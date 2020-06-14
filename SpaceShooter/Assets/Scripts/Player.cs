@@ -14,7 +14,7 @@ public class Player : MonoBehaviour
     [SerializeField]
     private float _increasedSpeedTimer = 500f;
     [SerializeField]
-    private int _ammoCount = 15;
+    private int _ammoCount = 15 , _maxAmmo = 15;
     [SerializeField]
     private GameObject _laserPrefab;
     [SerializeField]
@@ -105,7 +105,7 @@ public class Player : MonoBehaviour
            _audioScource.clip = _laserSound;
         }
 
-        _uiManager.UpdateAmmo(_ammoCount);
+        _uiManager.UpdateAmmo(_ammoCount, _maxAmmo);
     }
 
     void Update()
@@ -218,7 +218,7 @@ public class Player : MonoBehaviour
         {
             _audioScource.Play();
         }
-        _uiManager.UpdateAmmo(_ammoCount);
+        _uiManager.UpdateAmmo(_ammoCount, _maxAmmo);
     }
 
     public void Damage()
@@ -340,7 +340,7 @@ public class Player : MonoBehaviour
     {
         _isAmmoCollected = true;
         _ammoCount = 15;
-        _uiManager.UpdateAmmo(_ammoCount);
+        _uiManager.UpdateAmmo(_ammoCount, _maxAmmo);
         Debug.Log("Ammo collected");
     }
 

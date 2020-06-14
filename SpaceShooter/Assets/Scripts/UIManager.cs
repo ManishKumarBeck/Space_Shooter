@@ -64,9 +64,9 @@ public class UIManager : MonoBehaviour
         _livesImg.sprite = _liveSprites[currentLives];
     }
 
-    public void UpdateAmmo(int ammo)
+    public void UpdateAmmo(int ammo, int maxAmmo)
     {
-        _ammoText.text = "Ammo: " + ammo;
+        _ammoText.text = "Ammo: " + ammo + "/" + maxAmmo;
     }
 
     public void GameOverSequence()
