@@ -46,6 +46,7 @@ public class Player : MonoBehaviour
     private bool _isTripleShotActive = false;
     private bool _isShieldActive = false;
     private bool _isSpeedBoostActive = false;
+    private bool _isSpeedReduceActive = false;
     private bool _isAmmoCollected = false;
     private bool _isHunterDroneActive = false;
 
@@ -111,40 +112,16 @@ public class Player : MonoBehaviour
     void Update()
     {
 
-
         ClaculateMovement();
-        
+        CalculateSpeed();
         if (Input.GetKeyDown(KeyCode.Space) && Time.time > _canFire)
         {
             FireLaser();
         }
-
-        if (Input.GetKey(KeyCode.LeftShift) && _isSpeedBoostActive == false)
-        {
-            if (_increasedSpeedTimer > 1)
-            {
-                _speed = _increasedSpeed;
-                _uiManager.ThrusterVisualisation(_increasedSpeedTimer);
-                _thrusterRenderer.material.color = Color.blue;
-            }
-            else
-            {
-                _thrusterRenderer.material.color = Color.white;
-            }
-        }
-        else if (_isSpeedBoostActive == true)
-        {
-            _thrusterRenderer.material.color = Color.green;
-        }
-        else
-        {
-            _speed = _originalSpeed;
-            _thrusterRenderer.material.color = Color.white;
-        }
-
-        
+               
     }
 
+    
     void ClaculateMovement()
     {
         float horizontalInput = Input.GetAxis("Horizontal");
@@ -167,6 +144,39 @@ public class Player : MonoBehaviour
             transform.position = new Vector3(11.2f, transform.position.y, 0);
         }
     }
+
+    void CalculateSpeed()
+    {
+        if (Input.GetKey(KeyCode.LeftShift) && _isSpeedBoostActive == false && _isSpeedReduceActive == false)
+        {
+            if (_increasedSpeedTimer > 1)
+            {
+                _speed = _increasedSpeed;
+                _uiManager.ThrusterVisualisation(_increasedSpeedTimer);
+                _thrusterRenderer.material.color = Color.blue;
+            }
+            else
+            {
+                _thrusterRenderer.material.color = Color.white;
+            }
+        }
+        else if (_isSpeedBoostActive == true)
+        {
+            _thrusterRenderer.material.color = Color.green;
+        }
+        else if (_isSpeedReduceActive == true )
+        {
+            _thrusterRenderer.material.color = new Color(0.2f,0.5f,1f, 0.1f);
+            
+        }
+        else
+        {
+            _speed = _originalSpeed;
+            _thrusterRenderer.material.color = Color.white;
+        }
+
+    }
+
 
     private void FixedUpdate()
     {
@@ -310,6 +320,7 @@ public class Player : MonoBehaviour
         _originalSpeed *= _speedMultiplier;
         _speed = _originalSpeed;        
         _isSpeedBoostActive = true;
+        _isSpeedReduceActive = false;
         StartCoroutine(SpeedBoostPowerDownRoutine());
     }
 
@@ -328,6 +339,24 @@ public class Player : MonoBehaviour
         _shieldStrength = 3;
         _shieldRendered.material.color = Color.white;
 
+    }
+
+    public void SpeedReduce()
+    {
+        _originalSpeed *= 0.5f;
+        _speed = _originalSpeed;
+        _isSpeedReduceActive = true;
+        _isSpeedBoostActive = false;
+        Debug.Log(_speed);
+        StartCoroutine(SpeedReducePowerDownRoutine());
+    }
+
+    IEnumerator SpeedReducePowerDownRoutine()
+    {
+        yield return new WaitForSeconds(5f);
+        _originalSpeed /= 0.5f;
+        _speed = _originalSpeed;
+        _isSpeedReduceActive = false;
     }
 
     public void AddScore(int points)

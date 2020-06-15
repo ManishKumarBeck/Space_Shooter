@@ -44,6 +44,8 @@ public class PowerUp : MonoBehaviour
                          break;
                     case 5: player.HunterDroneActive();
                         break;
+                    case 6: player.SpeedReduce();
+                        break;
                     default:
                         Debug.Log("default");
                         break;

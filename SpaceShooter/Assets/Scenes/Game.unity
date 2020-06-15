@@ -920,6 +920,9 @@ MonoBehaviour:
   - {fileID: 7016669975256300465, guid: 8ddda24f115a6f34c845351fb4e2a6c3, type: 3}
   - {fileID: 5452614245710789616, guid: 6876d50c8a49c1a41b9e6aedce2e0982, type: 3}
   - {fileID: 1701511491407088665, guid: 905e9d58651dcc846b30725d7bfd0652, type: 3}
+  - {fileID: 5084470801897785241, guid: 857ecb829eee3444bbe10372770265e3, type: 3}
+  _spawnSpeed: 4
+  _gameTime: 0
 --- !u!1 &1233126663
 GameObject:
   m_ObjectHideFlags: 0
@@ -1933,11 +1936,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9506dcd0a2c64574b9cc6dc3247d74b3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _speed: 5
+  _speed: 1
   _originalSpeed: 5
   _increasedSpeed: 7.5
   _increasedSpeedTimer: 500
   _ammoCount: 15
+  _maxAmmo: 15
   _laserPrefab: {fileID: 6152843580120199240, guid: f3e220368b675ec418d93c1bac0b7bfc,
     type: 3}
   _tripleShot: {fileID: 7709507242342096, guid: a82ab8a0443de334c90bbcc11c222620,
